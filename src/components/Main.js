@@ -72,11 +72,77 @@ const Specials = () => {
   )
 }
 
+const numberToStars = (rating) => {
+  const result = []
+  let i = 0
+  while (i < rating) {
+    result.push('⭐')
+    i++
+  }
+  return result
+}
+
+const TestimonialCard = ({ rating, image, name, review }) => (
+  <div className='testimonial-card'>
+    <div>{numberToStars(rating)}</div>
+    <img src={image} alt='' />
+    <h3>{name}</h3>
+    <p>{review}</p>
+  </div>
+)
+
+const Testimonials = () => {
+  const testimonials = [
+    {
+      rating: 4,
+      image: 'Testimonial-1.jpg',
+      name: 'Mary',
+      review:
+        'Review text Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod quibusdam deserunt, iure veniam omnis inventore architecto alias',
+    },
+    {
+      rating: 5,
+      image: 'Testimonial-2.jpg',
+      name: 'Jane',
+      review:
+        'Review text Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod quibusdam deserunt, iure veniam omnis inventore architecto alias',
+    },
+    {
+      rating: 5,
+      image: 'Testimonial-3.jpg',
+      name: 'John',
+      review:
+        'Review text Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod quibusdam deserunt, iure veniam omnis inventore architecto alias',
+    },
+    {
+      rating: 4,
+      image: 'Testimonial-4.jpg',
+      name: 'Bob',
+      review:
+        'Review text Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod quibusdam deserunt, iure veniam omnis inventore architecto alias',
+    },
+  ]
+  return (
+    <div className='testimonials'>
+      <h1>Testimonials</h1>
+      {testimonials.map((testimonial) => (
+        <TestimonialCard
+          rating={testimonial.rating}
+          image={testimonial.image}
+          name={testimonial.name}
+          review={testimonial.review}
+        />
+      ))}
+    </div>
+  )
+}
+
 export const Main = () => {
   return (
     <>
       <Hero />
       <Specials />
+      <Testimonials />
     </>
   )
 }
