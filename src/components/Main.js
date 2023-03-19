@@ -60,12 +60,13 @@ const Specials = () => {
       <a className='button' href='/menu'>
         Online Menu
       </a>
-      {specials.map((special) => (
+      {specials.map((special, index) => (
         <Card
           image={special.image}
           name={special.name}
           price={special.price}
           text={special.text}
+          key={index}
         />
       ))}
     </div>
@@ -125,17 +126,34 @@ const Testimonials = () => {
   return (
     <div className='testimonials'>
       <h1>Testimonials</h1>
-      {testimonials.map((testimonial) => (
+      {testimonials.map((testimonial, index) => (
         <TestimonialCard
           rating={testimonial.rating}
           image={testimonial.image}
           name={testimonial.name}
           review={testimonial.review}
+          key={index}
         />
       ))}
     </div>
   )
 }
+
+const About = () => (
+  <div className='about'>
+    <h1>Little Lemon</h1>
+    <h2>Chicago</h2>
+    <p>
+      Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.
+      Velit officia consequat duis enim velit mollit. Exercitation veniam
+      consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est
+      sit aliqua dolor do amet sint. Velit officia consequat duis enim velit
+      mollit.{' '}
+    </p>
+    <img src='Mario and Adrian A.jpg' alt='Mario and Adrian' />
+    <img src='Mario and Adrian b.jpg' alt='Mario and Adrian' />
+  </div>
+)
 
 export const Main = () => {
   return (
@@ -143,6 +161,7 @@ export const Main = () => {
       <Hero />
       <Specials />
       <Testimonials />
+      <About />
     </>
   )
 }

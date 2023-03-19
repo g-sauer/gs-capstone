@@ -1,9 +1,11 @@
 export const Footer = () => {
   return (
-    <footer>
+    <footer className='footer'>
       <img src={'footer-logo.png'} alt='Little Lemon logo' />
-      <nav>
-        <header>Navigation</header>
+      <nav className='footer-list'>
+        <header>
+          Doormat <br /> Navigation
+        </header>
         <ul>
           <li>
             <a href='/'>Home</a>
@@ -25,22 +27,22 @@ export const Footer = () => {
           </li>
         </ul>
       </nav>
-      <nav>
+      <div className='footer-list'>
         <header>Contact</header>
         <ul>
           <li>Address</li>
           <li>Phone number</li>
           <li>Email</li>
         </ul>
-        <nav>
-          <header>Social media</header>
-          <ul>
-            <li>Twitter</li>
-            <li>Facebook</li>
-            <li>Instagram</li>
-          </ul>
-        </nav>
-      </nav>
+      </div>
+      <div className='footer-list'>
+        <header>Social Media Links</header>
+        <ul>
+          <li>Twitter</li>
+          <li>Facebook</li>
+          <li>Instagram</li>
+        </ul>
+      </div>
     </footer>
   )
 }

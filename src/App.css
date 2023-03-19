@@ -2,17 +2,18 @@
   margin: 0;
   padding: 0;
 }
-@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700;900&family=Markazi+Text&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700;800&family=Markazi+Text&display=swap');
 
-header {
+.header {
   display: flex;
   padding-top: 1rem;
   padding-bottom: 1rem;
   align-items: center;
   height: 5.5rem;
+  margin: 0 10%
 }
 
-header .logo {
+.header .logo {
   margin-left: 15%;
   display: flex;
 }
@@ -202,20 +203,88 @@ main {
   font-size: 0.9rem;
   margin: 0.5rem;
 }
+.about {
+  margin: 1rem 30%;
+  display: grid;
+  grid-template-columns: 27rem 30rem;
+  grid-template-rows: 4rem 3rem 10rem;
+}
 
-footer {
-  margin-top: 100rem;
+.about h1,
+h2 {
+  font-family: 'Markazi Text';
+}
+.about h1 {
+  grid-row: 1;
+  font-size: 4rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.about h2 {
+  grid-row: 2;
+  font-size: 2.7rem;
+  font-weight: normal;
+}
+
+.about p {
+  grid-row: 3;
+  font-family: 'Karla';
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding-right: 2rem;
+}
+
+.about > img:nth-child(4) {
+  position: relative
+}
+
+.about img ~ img {
+  width: 300px;
+  grid-column: 2;
+  margin-left: 12rem;
+  margin-top: 4rem;
+}
+.about img {
+  width: 300px;
+  grid-column: 2;
+}
+
+.footer {
+  margin-top: 5rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   display: flex;
+  background-color: #d9d9d9;
+  padding-left: 19rem;
+  align-items: center;
+  font-family: 'Karla';
+  flex-wrap: initial;
+  align-items: flex-start;
 }
-footer header {
+.footer header {
   margin-left: 3rem;
+  margin-bottom: 2rem;
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: #495e57;
 }
-footer ul {
+.footer ul {
   margin-left: 3rem;
   list-style: none;
 }
-footer > img {
-  width: 10%;
+.footer a, li {
+  text-decoration: none;
+  color: black;
+  font-size: 1.2rem;
+}
+.footer > img {
+  width: 160px;
+  object-fit: cover;
+}
+
+.footer-list {
+  margin-right: 5rem;
 }
 
 .button {
