@@ -1,3 +1,12 @@
+import { useEffect, useReducer, useState } from 'react'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Switch,
+  Route,
+  Link,
+} from 'react-router-dom'
+
 const Card = ({ image, name, price, text }) => (
   <div className='card'>
     <img className='card-image' src={image} alt={name} />
@@ -7,7 +16,9 @@ const Card = ({ image, name, price, text }) => (
       <p>{text}</p>
     </div>
     <div className='order-button'>
-      <a href={`/order?${name}`}>Order a delivery</a>
+      <a role='button' href={`/order?${name}`}>
+        Order a delivery
+      </a>
       <img src='bike.svg' alt='' />
     </div>
   </div>
@@ -17,14 +28,14 @@ const Hero = () => (
   <main>
     <div className='hero'>
       <div>
-        <h1>Little Lemon</h1>
+        <h1 id='ll-header'>Little Lemon</h1>
         <h2>Chicago</h2>
         <main>
           We are a family owned <br /> Mediterranean restaurant, <br />
           focused on traditional <br /> recipes served with a modern <br />
           twist.
         </main>
-        <a className='button' href='/reserve'>
+        <a role='button' className='button' href='/booking'>
           Reserve a Table
         </a>
       </div>
@@ -57,7 +68,7 @@ const Specials = () => {
   return (
     <div className='specials'>
       <h1>This week's specials!</h1>
-      <a className='button' href='/menu'>
+      <a role='button' className='button' href='/menu'>
         Online Menu
       </a>
       {specials.map((special, index) => (
@@ -155,13 +166,111 @@ const About = () => (
   </div>
 )
 
-export const Main = () => {
+const Booking = ({ availableTimes, dispatch }) => {
+  const [date, setDate] = useState('')
+  const [time, setTime] = useState('')
+  const [guests, setGuests] = useState('1')
+  const [occasion, setOccasion] = useState('')
+
+  const today = new Date().toLocaleDateString('en-CA')
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.error(date, time, guests, occasion)
+  }
+
+  const handleDateChange = (e) => {
+    setDate(e.target.value)
+    dispatch({ type: 'update_times', date: date })
+  }
+
+  useEffect(() => {
+    dispatch({ type: 'initialize_times' })
+    setTime(availableTimes[0])
+  }, [])
+
   return (
-    <>
-      <Hero />
-      <Specials />
-      <Testimonials />
-      <About />
-    </>
+    <div className='booking'>
+      <h1 id='ll-header'>Little Lemon</h1>
+      <h2>Chicago</h2>
+      <h3>Find a table for any occasion</h3>
+      <form className='booking-form' onSubmit={(e) => handleSubmit(e)}>
+        <label htmlFor='res-date'>Choose date</label>
+        <input
+          type='date'
+          id='res-date'
+          min={today}
+          onChange={handleDateChange}
+          required
+        />
+        <label htmlFor='res-time'>Choose time</label>
+        <select
+          required
+          defaultValue=''
+          id='res-time'
+          onChange={(e) => setTime(e.target.value)}
+        >
+          <option hidden disabled value=''>
+            Choose time
+          </option>
+          {availableTimes.map((date, i) => (
+            <option key={i}>{date}</option>
+          ))}
+        </select>
+        <label htmlFor='guests'>Number of guests</label>
+        <input
+          type='number'
+          placeholder={1}
+          min={1}
+          max={10}
+          id='guests'
+          onChange={(e) => setGuests(e.target.value)}
+        />
+        <label htmlFor='occasion'>Occasion</label>
+        <select id='occasion' onChange={(e) => setOccasion(e.target.value)}>
+          <option></option>
+          <option>Birthday</option>
+          <option>Anniversary</option>
+        </select>
+        <input className='button' id='form-submit' type='submit' defaultValue='Make Your reservation' />
+      </form>
+    </div>
+  )
+}
+
+const HomePage = () => (
+  <>
+    <Hero />
+    <Specials />
+    <Testimonials />
+    <About />
+  </>
+)
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'update_times':
+      return ['17:00']
+    case 'initialize_times':
+      return ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00']
+    default:
+      return state
+  }
+}
+export const Main = () => {
+  const initialState = []
+  const [state, dispatch] = useReducer(reducer, initialState)
+  //https://www.coursera.org/learn/meta-front-end-developer-capstone/supplement/eljW4/exercise-adding-table-booking-state
+  //https://www.coursera.org/learn/advanced-react/lecture/gSMJb/what-is-usereducer-and-how-it-differs-from-usestate
+
+  return (
+    <Router>
+      <Routes>
+        <Route path='/' element={<HomePage />}></Route>
+        <Route
+          path='/booking'
+          element={<Booking availableTimes={state} dispatch={dispatch} />}
+        ></Route>
+      </Routes>
+    </Router>
   )
 }
