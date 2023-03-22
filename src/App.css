@@ -333,13 +333,16 @@ input {
   padding: 10px 15px;
 }
 
-.booking-form option:checked {
+/* .booking-form option:checked {
   color: black;
   background-color: blue;
-}
+} */
 
 #form-submit {
-  padding-bottom: 15%;
+  padding-bottom: 17%;
+}
+#form-submit:disabled {
+  background-color: #d9d9d9;
 }
 
 .button {

@@ -5,7 +5,9 @@ import {
   Switch,
   Route,
   Link,
+  useNavigate,
 } from 'react-router-dom'
+import { fetchAPI, submitAPI } from '../api'
 
 const Card = ({ image, name, price, text }) => (
   <div className='card'>
@@ -166,22 +168,40 @@ const About = () => (
   </div>
 )
 
-export const Booking = ({ availableTimes, dispatch }) => {
+const ConfirmedBooking = () => {
+  return (
+    <div>
+      <h1>Your booking was confirmed</h1>
+    </div>
+  )
+}
+
+export const Booking = ({ availableTimes, dispatch, submitForm }) => {
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [guests, setGuests] = useState('1')
   const [occasion, setOccasion] = useState('')
+  const navigate = useNavigate()
+
 
   const today = new Date().toLocaleDateString('en-CA')
 
   const handleSubmit = (e) => {
     e.preventDefault()
     // console.error(date, time, guests, occasion)
+    if (
+      submitForm({
+        date: date,
+        time: time,
+        guests: guests,
+        occasion: occasion,
+      }) === true
+    )
+      navigate('/confirmation')
   }
-
   const handleDateChange = (e) => {
     setDate(e.target.value)
-    dispatch({ type: 'update_times', date: e.target.value })
+    dispatch({ type: 'update_times', date: new Date(e.target.value) })
   }
 
   useEffect(() => {
@@ -202,11 +222,12 @@ export const Booking = ({ availableTimes, dispatch }) => {
           min={today}
           onChange={handleDateChange}
           required
+          value={date}
         />
         <label htmlFor='res-time'>Choose time</label>
         <select
           required
-          defaultValue=''
+          value={time}
           id='res-time'
           onChange={(e) => setTime(e.target.value)}
         >
@@ -225,14 +246,25 @@ export const Booking = ({ availableTimes, dispatch }) => {
           max={10}
           id='guests'
           onChange={(e) => setGuests(e.target.value)}
+          value={guests}
         />
         <label htmlFor='occasion'>Occasion</label>
-        <select id='occasion' onChange={(e) => setOccasion(e.target.value)}>
+        <select
+          id='occasion'
+          onChange={(e) => setOccasion(e.target.value)}
+          value={occasion}
+        >
           <option></option>
           <option>Birthday</option>
           <option>Anniversary</option>
         </select>
-        <input className='button' id='form-submit' type='submit' defaultValue='Make Your reservation' />
+        <input
+          className='button'
+          id='form-submit'
+          type='submit'
+          defaultValue='Make Your reservation'
+          disabled={date === '' || time === undefined}
+        />
       </form>
     </div>
   )
@@ -246,12 +278,16 @@ const HomePage = () => (
     <About />
   </>
 )
+export const fetchData = (date) => {
+  return fetchAPI(date)
+}
+
 export const reducer = (state, action) => {
   switch (action.type) {
     case 'update_times':
-      return ['17:00']
+      return fetchData(action.date)
     case 'initialize_times':
-      return ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00']
+      return fetchData(new Date())
     default:
       return state
   }
@@ -260,14 +296,25 @@ export const Main = () => {
   const initialState = []
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  const submitForm = (form) => {
+    return submitAPI(form)
+  }
+
   return (
     <Router>
       <Routes>
         <Route path='/' element={<HomePage />}></Route>
         <Route
           path='/booking'
-          element={<Booking availableTimes={state} dispatch={dispatch} />}
+          element={
+            <Booking
+              availableTimes={state}
+              dispatch={dispatch}
+              submitForm={submitForm}
+            />
+          }
         ></Route>
+        <Route path='/confirmation' element={<ConfirmedBooking />}></Route>
       </Routes>
     </Router>
   )

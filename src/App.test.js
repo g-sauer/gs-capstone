@@ -1,6 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import App from './App'
-import { reducer, Booking } from './components/Main'
+import { reducer, Booking, fetchData } from './components/Main'
+const mockedUsedNavigate = jest.fn()
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedUsedNavigate, // Return an empty jest function to test whether it was called or not...I'm not depending on the results so no need to put in a return value
+}))
 
 test('home page renders', () => {
   render(<App />)
@@ -24,7 +30,7 @@ describe('Reducer related', () => {
 
     expect(dispatch).toHaveBeenCalledWith({
       type: 'update_times',
-      date: '2023-09-22',
+      date: new Date('2023-09-22'),
     })
   })
   test('on first load of Booking dispatches initialize_times to reducer', () => {
@@ -36,34 +42,54 @@ describe('Reducer related', () => {
     expect(dispatch).toHaveBeenCalledTimes(1)
   })
 
-  test('reducer returns only 17:00 on update_times', () => {
-    const result = reducer([], { type: 'update_times' })
-    expect(result).toStrictEqual(['17:00'])
+  describe('form related', () => {
+    test('cannot submit with empty fields', () => {
+      const submitForm = jest.fn()
+      render(
+        <Booking
+          availableTimes={[]}
+          dispatch={() => {}}
+          submitForm={submitForm}
+        />
+      )
+
+      const btn = screen.getByRole('button')
+      fireEvent.click(btn)
+      expect(submitForm).not.toHaveBeenCalled()
+    })
+    test('should be able to submit if fields are filled', () => {
+      const submitForm = jest.fn()
+      render(
+        <Booking
+          availableTimes={['17:00', '17:30', '18:00']}
+          dispatch={() => {}}
+          submitForm={submitForm}
+        />
+      )
+      const btn = screen.getByRole('button')
+
+      const dateInput = screen.getByLabelText('Choose date')
+      fireEvent.change(dateInput, { target: { value: '2023-09-22' } })
+      const timeInput = screen.getByLabelText('Choose time')
+      fireEvent.change(timeInput, { target: { value: '17:30' } })
+      const guestsInput = screen.getByLabelText('Number of guests')
+      fireEvent.change(guestsInput, { target: { value: '3' } })
+      const occasionInput = screen.getByLabelText('Occasion')
+      fireEvent.change(occasionInput, { target: { value: 'Birthday' } })
+
+      fireEvent.click(btn)
+      expect(submitForm).toHaveBeenCalledWith({
+        date: '2023-09-22',
+        guests: '3',
+        occasion: 'Birthday',
+        time: '17:30',
+      })
+    })
   })
 })
-describe('form related', () => {
-  test('cannot submit with empty fields', () => {
-    const dispatch = jest.fn()
-    render(<Booking availableTimes={[]} dispatch={dispatch} />)
-
-    const btn = screen.getByRole('button')
-    fireEvent.click(btn)
-    expect(dispatch).not.toHaveBeenCalledWith({ type: 'update_times'})
+describe('fetching', () => {
+  test('fetchData should return a non empty array when called with a date', () => {
+    const res = fetchData(new Date())
+    expect(res.length).toBeGreaterThan(0)
   })
-  test('should be able to submit if fields are filled', () => { 
-    const dispatch = jest.fn()
-    render(<Booking availableTimes={[]} dispatch={dispatch} />)
-    const btn = screen.getByRole('button')
-
-    const dateInput = screen.getByLabelText('Choose date')
-    fireEvent.change(dateInput, { target: { value: '2023-09-22' } })
-    const timeInput = screen.getByLabelText('Choose time')
-    fireEvent.change(timeInput, { target: { value: '17:00' } })
-    const guestsInput = screen.getByLabelText('Number of guests')
-    fireEvent.change(guestsInput, { target: { value: '3' } })
-
-    fireEvent.click(btn)
-    expect(dispatch).toHaveBeenCalledWith({ type: 'update_times'})
-
-   })
 })
