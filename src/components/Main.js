@@ -166,7 +166,7 @@ const About = () => (
   </div>
 )
 
-const Booking = ({ availableTimes, dispatch }) => {
+export const Booking = ({ availableTimes, dispatch }) => {
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [guests, setGuests] = useState('1')
@@ -176,12 +176,12 @@ const Booking = ({ availableTimes, dispatch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.error(date, time, guests, occasion)
+    // console.error(date, time, guests, occasion)
   }
 
   const handleDateChange = (e) => {
     setDate(e.target.value)
-    dispatch({ type: 'update_times', date: date })
+    dispatch({ type: 'update_times', date: e.target.value })
   }
 
   useEffect(() => {
@@ -246,7 +246,7 @@ const HomePage = () => (
     <About />
   </>
 )
-const reducer = (state, action) => {
+export const reducer = (state, action) => {
   switch (action.type) {
     case 'update_times':
       return ['17:00']
@@ -259,8 +259,6 @@ const reducer = (state, action) => {
 export const Main = () => {
   const initialState = []
   const [state, dispatch] = useReducer(reducer, initialState)
-  //https://www.coursera.org/learn/meta-front-end-developer-capstone/supplement/eljW4/exercise-adding-table-booking-state
-  //https://www.coursera.org/learn/advanced-react/lecture/gSMJb/what-is-usereducer-and-how-it-differs-from-usestate
 
   return (
     <Router>
