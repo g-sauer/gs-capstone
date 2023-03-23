@@ -5,7 +5,6 @@ const Hamburger = () => {
   const handleClick = () => {
     setOpen(!open)
   }
-  console.error(open)
   return (
     <div className='hamburger'>
       <img

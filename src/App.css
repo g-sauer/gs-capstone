@@ -346,6 +346,27 @@ input {
   background-color: #d9d9d9;
 }
 
+.confirmed {
+  background-color: #495e57;
+}
+.confirmed h1 {
+  font-family: 'Markazi Text';
+  font-weight: 400;
+  font-size: 3.5rem;
+  color: #f4ce14;
+  padding: 3rem
+}
+.confirmed p {
+  font-family: 'Karla';
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: white;
+  padding-left: 3rem;
+}
+.confirmed .button {
+  margin: 3rem;
+}
+
 .button {
   display: block;
   width: fit-content;

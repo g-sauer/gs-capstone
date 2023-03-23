@@ -3,9 +3,7 @@ import { useEffect, useReducer, useState } from 'react'
 import {
   BrowserRouter as Router,
   Routes,
-  Switch,
   Route,
-  Link,
   useNavigate,
 } from 'react-router-dom'
 import { fetchAPI, submitAPI } from '../api'
@@ -99,12 +97,12 @@ const numberToStars = (rating) => {
 }
 
 const TestimonialCard = ({ rating, image, name, review }) => (
-  <div className='testimonial-card'>
+  <section className='testimonial-card'>
     <div>{numberToStars(rating)}</div>
     <img src={image} alt='' />
     <h3>{name}</h3>
     <p>{review}</p>
-  </div>
+  </section>
 )
 
 const Testimonials = () => {
@@ -139,7 +137,7 @@ const Testimonials = () => {
     },
   ]
   return (
-    <div className='testimonials'>
+    <section className='testimonials'>
       <h1>Testimonials</h1>
       {testimonials.map((testimonial, index) => (
         <TestimonialCard
@@ -150,12 +148,12 @@ const Testimonials = () => {
           key={index}
         />
       ))}
-    </div>
+    </section>
   )
 }
 
 const About = () => (
-  <div className='about'>
+  <section className='about'>
     <h1>Little Lemon</h1>
     <h2>Chicago</h2>
     <p>
@@ -167,22 +165,24 @@ const About = () => (
     </p>
     <img src='Mario and Adrian A.jpg' alt='Mario and Adrian' />
     <img src='Mario and Adrian b.jpg' alt='Mario and Adrian' />
-  </div>
+  </section>
 )
 
 const ConfirmedBooking = () => {
   return (
-    <div>
-      <h1>Your booking was confirmed</h1>
-    </div>
+    <main className='confirmed'>
+      <h1>Your booking has been confirmed</h1>
+      <p>Thank you for your reservation, hope to see you soon!</p>
+      <a role='button' className='button' href='./'>
+          Home
+        </a>
+    </main>
   )
 }
 
 export const Booking = ({ availableTimes, dispatch, submitForm }) => {
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
-  const [guests, setGuests] = useState('1')
-  const [occasion, setOccasion] = useState('')
   const navigate = useNavigate()
   const today = new Date().toLocaleDateString('en-CA')
   const formik = useFormik({
@@ -193,7 +193,6 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
       occasion: '',
     },
     onSubmit: (values) => {
-      // console.error(values)
       if (submitForm(values)) {
         navigate('/confirmation')
       }
@@ -213,18 +212,6 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
     }),
   })
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (
-      submitForm({
-        date: date,
-        time: time,
-        guests: guests,
-        occasion: occasion,
-      }) === true
-    )
-      navigate('/confirmation')
-  }
   const handleDateChange = (e) => {
     setDate(e.target.value)
     dispatch({ type: 'update_times', date: new Date(e.target.value) })
@@ -234,6 +221,7 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
     dispatch({ type: 'initialize_times' })
     setTime(availableTimes[0])
   }, [])
+  
   return (
     <div className='booking'>
       <h1 id='ll-header'>Little Lemon</h1>
