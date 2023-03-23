@@ -309,6 +309,7 @@ li {
 .booking-form {
   display: grid;
   min-width: 250px;
+  max-width: 250px;
   gap: 20px;
 }
 .booking-form label {
@@ -332,6 +333,7 @@ input {
   width: 100%;
   padding: 10px 15px;
 }
+
 
 /* .booking-form option:checked {
   color: black;
@@ -357,4 +359,10 @@ input {
   background-color: #f4ce14;
   padding: 1.2rem 2.5rem;
   border-radius: 16px;
+}
+
+.error {
+  font-size: .9rem;
+  color: red;
+  margin-top: -10px;
 }

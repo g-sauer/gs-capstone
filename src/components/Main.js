@@ -1,3 +1,4 @@
+import { useFormik } from 'formik'
 import { useEffect, useReducer, useState } from 'react'
 import {
   BrowserRouter as Router,
@@ -8,6 +9,7 @@ import {
   useNavigate,
 } from 'react-router-dom'
 import { fetchAPI, submitAPI } from '../api'
+import * as Yup from 'yup'
 
 const Card = ({ image, name, price, text }) => (
   <div className='card'>
@@ -182,13 +184,37 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
   const [guests, setGuests] = useState('1')
   const [occasion, setOccasion] = useState('')
   const navigate = useNavigate()
-
-
   const today = new Date().toLocaleDateString('en-CA')
+  const formik = useFormik({
+    initialValues: {
+      date: '',
+      time: '',
+      guests: 1,
+      occasion: '',
+    },
+    onSubmit: (values) => {
+      // console.error(values)
+      if (submitForm(values)) {
+        navigate('/confirmation')
+      }
+    },
+    validationSchema: Yup.object({
+      date: Yup.date()
+        .min(today, 'Date cannot be before current date')
+        .required('Required'),
+      time: Yup.string().required('Required'),
+      guests: Yup.number()
+        .min(1, 'Must be at least 1')
+        .max(
+          10,
+          'To make a reservation for more than 10 people, please call us'
+        )
+        .required('Required'),
+    }),
+  })
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // console.error(date, time, guests, occasion)
     if (
       submitForm({
         date: date,
@@ -208,28 +234,37 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
     dispatch({ type: 'initialize_times' })
     setTime(availableTimes[0])
   }, [])
-
   return (
     <div className='booking'>
       <h1 id='ll-header'>Little Lemon</h1>
       <h2>Chicago</h2>
       <h3>Find a table for any occasion</h3>
-      <form className='booking-form' onSubmit={(e) => handleSubmit(e)}>
+      <form
+        className='booking-form'
+        onSubmit={
+          formik.handleSubmit
+        }
+      >
         <label htmlFor='res-date'>Choose date</label>
         <input
           type='date'
+          name='date'
           id='res-date'
           min={today}
-          onChange={handleDateChange}
+          onChange={(e) => {
+            formik.handleChange(e)
+            handleDateChange(e)
+          }}
           required
-          value={date}
         />
+        {formik.errors.date && <div className='error'>{formik.errors.date}</div>}
         <label htmlFor='res-time'>Choose time</label>
         <select
+          name='time'
           required
           value={time}
           id='res-time'
-          onChange={(e) => setTime(e.target.value)}
+          onChange={formik.handleChange}
         >
           <option hidden disabled value=''>
             Choose time
@@ -238,22 +273,20 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
             <option key={i}>{date}</option>
           ))}
         </select>
+        {formik.errors.time && <div className='error'>{formik.errors.time}</div>}
         <label htmlFor='guests'>Number of guests</label>
         <input
+          name='guests'
           type='number'
           placeholder={1}
           min={1}
           max={10}
           id='guests'
-          onChange={(e) => setGuests(e.target.value)}
-          value={guests}
+          onChange={formik.handleChange}
         />
+        {formik.errors.guests && <div className='error'>{formik.errors.guests}</div>}
         <label htmlFor='occasion'>Occasion</label>
-        <select
-          id='occasion'
-          onChange={(e) => setOccasion(e.target.value)}
-          value={occasion}
-        >
+        <select name='occasion' id='occasion' onChange={formik.handleChange}>
           <option></option>
           <option>Birthday</option>
           <option>Anniversary</option>
@@ -263,7 +296,7 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
           id='form-submit'
           type='submit'
           defaultValue='Make Your reservation'
-          disabled={date === '' || time === undefined}
+          disabled={!(formik.isValid && formik.dirty)}
         />
       </form>
     </div>

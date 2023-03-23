@@ -1,11 +1,11 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import App from './App'
 import { reducer, Booking, fetchData } from './components/Main'
 const mockedUsedNavigate = jest.fn()
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockedUsedNavigate, // Return an empty jest function to test whether it was called or not...I'm not depending on the results so no need to put in a return value
+  useNavigate: () => mockedUsedNavigate,
 }))
 
 test('home page renders', () => {
@@ -41,50 +41,151 @@ describe('Reducer related', () => {
     expect(dispatch).toHaveBeenCalledWith({ type: 'initialize_times' })
     expect(dispatch).toHaveBeenCalledTimes(1)
   })
+})
+describe('form related', () => {
+  test('cannot submit with empty fields', () => {
+    const submitForm = jest.fn()
+    render(
+      <Booking
+        availableTimes={[]}
+        dispatch={() => {}}
+        submitForm={submitForm}
+      />
+    )
 
-  describe('form related', () => {
-    test('cannot submit with empty fields', () => {
-      const submitForm = jest.fn()
-      render(
-        <Booking
-          availableTimes={[]}
-          dispatch={() => {}}
-          submitForm={submitForm}
-        />
-      )
+    const btn = screen.getByRole('button')
+    fireEvent.click(btn)
+    expect(submitForm).not.toHaveBeenCalled()
+  })
+  test('should be able to submit if fields are filled', async () => {
+    const submitForm = jest.fn()
+    render(
+      <Booking
+        availableTimes={['17:00', '17:30', '18:00']}
+        dispatch={() => {}}
+        submitForm={submitForm}
+      />
+    )
+    const btn = screen.getByRole('button')
 
-      const btn = screen.getByRole('button')
-      fireEvent.click(btn)
-      expect(submitForm).not.toHaveBeenCalled()
-    })
-    test('should be able to submit if fields are filled', () => {
-      const submitForm = jest.fn()
-      render(
-        <Booking
-          availableTimes={['17:00', '17:30', '18:00']}
-          dispatch={() => {}}
-          submitForm={submitForm}
-        />
-      )
-      const btn = screen.getByRole('button')
+    const dateInput = screen.getByLabelText('Choose date')
+    fireEvent.change(dateInput, { target: { value: '2023-09-22' } })
+    const timeInput = screen.getByLabelText('Choose time')
+    fireEvent.change(timeInput, { target: { value: '17:30' } })
+    const guestsInput = screen.getByLabelText('Number of guests')
+    fireEvent.change(guestsInput, { target: { value: 3 } })
+    const occasionInput = screen.getByLabelText('Occasion')
+    fireEvent.change(occasionInput, { target: { value: 'Birthday' } })
 
-      const dateInput = screen.getByLabelText('Choose date')
-      fireEvent.change(dateInput, { target: { value: '2023-09-22' } })
-      const timeInput = screen.getByLabelText('Choose time')
-      fireEvent.change(timeInput, { target: { value: '17:30' } })
-      const guestsInput = screen.getByLabelText('Number of guests')
-      fireEvent.change(guestsInput, { target: { value: '3' } })
-      const occasionInput = screen.getByLabelText('Occasion')
-      fireEvent.change(occasionInput, { target: { value: 'Birthday' } })
-
-      fireEvent.click(btn)
+    fireEvent.click(btn)
+    await waitFor(() => {
       expect(submitForm).toHaveBeenCalledWith({
         date: '2023-09-22',
-        guests: '3',
+        guests: 3,
         occasion: 'Birthday',
         time: '17:30',
       })
     })
+  })
+  test('cannot submit if date is empty', async () => {
+    const submitForm = jest.fn()
+    render(
+      <Booking
+        availableTimes={['17:00', '17:30', '18:00']}
+        dispatch={() => {}}
+        submitForm={submitForm}
+      />
+    )
+    const btn = screen.getByRole('button')
+
+    const timeInput = screen.getByLabelText('Choose time')
+    fireEvent.change(timeInput, { target: { value: '17:30' } })
+    const guestsInput = screen.getByLabelText('Number of guests')
+    fireEvent.change(guestsInput, { target: { value: 3 } })
+    const occasionInput = screen.getByLabelText('Occasion')
+    fireEvent.change(occasionInput, { target: { value: 'Birthday' } })
+
+    fireEvent.click(btn)
+    await waitFor(() => {
+      expect(submitForm).not.toHaveBeenCalled()
+    })
+  })
+  test('cannot submit if time is empty', async () => {
+    const submitForm = jest.fn()
+    render(
+      <Booking
+        availableTimes={['17:00', '17:30', '18:00']}
+        dispatch={() => {}}
+        submitForm={submitForm}
+      />
+    )
+    const btn = screen.getByRole('button')
+
+    const dateInput = screen.getByLabelText('Choose date')
+    fireEvent.change(dateInput, { target: { value: '2023-09-22' } })
+    const guestsInput = screen.getByLabelText('Number of guests')
+    fireEvent.change(guestsInput, { target: { value: 3 } })
+    const occasionInput = screen.getByLabelText('Occasion')
+    fireEvent.change(occasionInput, { target: { value: 'Birthday' } })
+
+    fireEvent.click(btn)
+    await waitFor(() => {
+      expect(submitForm).not.toHaveBeenCalled()
+    })
+  })
+  test('cannot submit if guests is under 1', async () => {
+    const submitForm = jest.fn()
+    render(
+      <Booking
+        availableTimes={['17:00', '17:30', '18:00']}
+        dispatch={() => {}}
+        submitForm={submitForm}
+      />
+    )
+    const btn = screen.getByRole('button')
+
+    const dateInput = screen.getByLabelText('Choose date')
+    fireEvent.change(dateInput, { target: { value: '2023-09-22' } })
+    const timeInput = screen.getByLabelText('Choose time')
+    fireEvent.change(timeInput, { target: { value: '17:30' } })
+    const occasionInput = screen.getByLabelText('Occasion')
+    fireEvent.change(occasionInput, { target: { value: 'Birthday' } })
+
+    const guestsInput = screen.getByLabelText('Number of guests')
+    fireEvent.change(guestsInput, { target: { value: -1 } })
+
+    fireEvent.click(btn)
+    await waitFor(() => {
+      expect(submitForm).not.toHaveBeenCalled()
+    })
+    
+  })
+  test('cannot submit if guests is over 10', async () => {
+    const submitForm = jest.fn()
+    render(
+      <Booking
+        availableTimes={['17:00', '17:30', '18:00']}
+        dispatch={() => {}}
+        submitForm={submitForm}
+      />
+    )
+    const btn = screen.getByRole('button')
+
+    const dateInput = screen.getByLabelText('Choose date')
+    fireEvent.change(dateInput, { target: { value: '2023-09-22' } })
+    const timeInput = screen.getByLabelText('Choose time')
+    fireEvent.change(timeInput, { target: { value: '17:30' } })
+    const occasionInput = screen.getByLabelText('Occasion')
+    fireEvent.change(occasionInput, { target: { value: 'Birthday' } })
+
+    const guestsInput = screen.getByLabelText('Number of guests')
+    fireEvent.change(guestsInput, { target: { value: 12 } })
+
+    fireEvent.click(btn)
+    await waitFor(() => {
+      expect(submitForm).not.toHaveBeenCalled()
+    })
+    
   })
 })
 describe('fetching', () => {
