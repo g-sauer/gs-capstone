@@ -10,11 +10,11 @@
   padding-bottom: 1rem;
   align-items: center;
   height: 5.5rem;
-  margin: 0 10%;
+  margin: 0 0 0 10%;
 }
 
 .header .logo {
-  margin-left: 15%;
+  margin-left: 10%;
   display: flex;
 }
 .logo > img {
@@ -96,7 +96,7 @@ main {
   grid-template-rows: 5rem auto;
   margin-top: 8rem;
   margin-bottom: 3rem;
-  padding: 0 17rem;
+  padding: 0 12vw;
 }
 .specials > h1 {
   font-family: 'Markazi Text';
@@ -204,10 +204,10 @@ main {
   margin: 0.5rem;
 }
 .about {
-  margin: 1rem 30%;
+  margin: 1rem 10%;
   display: grid;
-  grid-template-columns: 27rem 30rem;
-  grid-template-rows: 4rem 3rem 10rem;
+  grid-template-columns: 50vw 30vw;
+  grid-template-rows: 8rem 3rem 10rem;
 }
 
 .about h1,
@@ -242,7 +242,7 @@ h2 {
 .about img ~ img {
   width: 300px;
   grid-column: 2;
-  margin-left: 12rem;
+  margin-left: 7rem;
   margin-top: 4rem;
 }
 .about img {
@@ -256,7 +256,7 @@ h2 {
   padding-bottom: 2rem;
   display: flex;
   background-color: #d9d9d9;
-  padding-left: 19rem;
+  padding-left: 10%;
   align-items: center;
   font-family: 'Karla';
   flex-wrap: initial;
@@ -297,7 +297,7 @@ li {
   color: white;
   font-size: 1.3rem;
   padding: 3rem;
-  padding-left: 44%;
+  padding-left: 35%;
 }
 .booking h2 {
   margin-bottom: 2.5rem;
@@ -334,7 +334,6 @@ input {
   padding: 10px 15px;
 }
 
-
 /* .booking-form option:checked {
   color: black;
   background-color: blue;
@@ -362,7 +361,219 @@ input {
 }
 
 .error {
-  font-size: .9rem;
+  font-size: 0.9rem;
   color: red;
   margin-top: -10px;
+}
+
+.hamburger {
+  display: none;
+}
+
+@media screen and (max-width: 1023px) {
+  .hamburger {
+    display: flex;
+  }
+  .hamburger > img {
+    margin-left: -2.8rem;
+    z-index: 1;
+    position: absolute;
+  }
+
+  img#true {
+    position: fixed;
+  }
+
+  .sidebar {
+    background-color: #edefee;
+    width: 13rem;
+    position: fixed;
+    height: 100%;
+    margin-top: -4rem;
+    margin-left: -6.1rem;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+  }
+  #true {
+    transform: translateX(0);
+  }
+
+  .sidebar ul {
+    list-style: none;
+    display: grid;
+    margin-left: 0.2rem;
+    margin-top: 7rem;
+  }
+  .sidebar ul a {
+    text-decoration: none;
+
+    width: 56px;
+    /* height: 28px; */
+    font-family: 'Karla';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 23px;
+    color: black;
+  }
+
+  .sidebar li {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .navbar {
+    display: none;
+  }
+
+  .hero {
+    background-color: #495e57;
+    display: flex;
+    height: 23rem;
+    justify-content: space-evenly;
+    flex-direction: column;
+    padding-top: 6rem;
+    padding-left: 10%;
+  }
+
+  #ll-header {
+    /* margin-top: 12rem; */
+    font-family: 'Markazi Text';
+    font-weight: 500;
+    font-size: 3rem;
+    line-height: 67px;
+    color: #f4ce14;
+  }
+  #ll-header ~ h2 {
+    font-family: 'Markazi Text';
+    color: white;
+    font-weight: 400;
+    font-size: 1.7rem;
+    line-height: 38px;
+  }
+
+  .hero main {
+    /* width: 13rem; */
+    /* margin-top: 50rem; */
+    height: auto;
+    margin-right: -50px;
+    font-family: 'Karla';
+    font-weight: 400;
+    font-size: 1.2rem;
+    line-height: 29px;
+    color: white;
+    margin-bottom: 2rem;
+  }
+  .hero img {
+    margin-top: 2rem;
+    width: 373px;
+    height: 170px;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+
+  .specials {
+    padding: 10rem 0rem 0rem 1rem;
+    grid-template-rows: 13rem auto auto auto;
+    grid-template-columns: auto auto;
+    margin: 10vw;
+  }
+  .card {
+    grid-column: span 3;
+    grid-row: auto;
+    margin: 1rem 1rem;
+    padding-bottom: 1.5rem;
+    border-radius: 16px 16px 0 0;
+  }
+  .testimonials {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto auto auto auto;
+    justify-content: center;
+    background-color: #d9d9d9;
+    padding: 2rem 0rem 4rem;
+  }
+  .testimonials > h1 {
+    grid-row: 1;
+    grid-column: 1;
+    font-family: 'Markazi Text';
+    margin-left: 39%;
+    margin-bottom: 2rem;
+  }
+  .testimonial-card {
+    display: grid;
+    grid-template-columns: 2;
+    grid-template-rows: 3;
+    grid-row: auto;
+    margin: 1rem 5rem;
+
+    background-color: white;
+    font-family: 'Karla';
+    padding: 1rem;
+  }
+  .about {
+    margin: 1rem 10%;
+    display: flex;
+    flex-direction: column;
+  }
+  .about > img:nth-child(4) {
+    position: relative;
+  }
+
+  .about p {
+    font-family: 'Karla';
+    font-size: 1.3rem;
+    font-weight: 700;
+    padding-right: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .about img ~ img {
+    display: none;
+    width: 300px;
+    margin-left: 17rem;
+    margin-top: -8rem;
+  }
+  .about img {
+    width: 300px;
+  }
+  .footer {
+    margin-top: 5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    display: grid;
+    background-color: #d9d9d9;
+    padding-left: 10%;
+    align-items: center;
+    font-family: 'Karla';
+    align-items: flex-start;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto auto;
+  }
+  .footer header {
+    margin-left: 0rem;
+    margin-bottom: 2rem;
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: #495e57;
+  }
+  .footer ul {
+    margin-left: 0rem;
+    list-style: none;
+    margin-bottom: 3rem;
+  }
+  .footer a,
+  li {
+    text-decoration: none;
+    color: black;
+    font-size: 1.2rem;
+  }
+  .footer > img {
+    width: 120px;
+    object-fit: cover;
+  }
+
+  .footer-list {
+    margin-right: 5rem;
+  }
 }

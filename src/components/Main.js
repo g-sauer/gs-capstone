@@ -239,12 +239,7 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
       <h1 id='ll-header'>Little Lemon</h1>
       <h2>Chicago</h2>
       <h3>Find a table for any occasion</h3>
-      <form
-        className='booking-form'
-        onSubmit={
-          formik.handleSubmit
-        }
-      >
+      <form className='booking-form' onSubmit={formik.handleSubmit}>
         <label htmlFor='res-date'>Choose date</label>
         <input
           type='date'
@@ -257,7 +252,9 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
           }}
           required
         />
-        {formik.errors.date && <div className='error'>{formik.errors.date}</div>}
+        {formik.errors.date && (
+          <div className='error'>{formik.errors.date}</div>
+        )}
         <label htmlFor='res-time'>Choose time</label>
         <select
           name='time'
@@ -273,7 +270,9 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
             <option key={i}>{date}</option>
           ))}
         </select>
-        {formik.errors.time && <div className='error'>{formik.errors.time}</div>}
+        {formik.errors.time && (
+          <div className='error'>{formik.errors.time}</div>
+        )}
         <label htmlFor='guests'>Number of guests</label>
         <input
           name='guests'
@@ -284,7 +283,9 @@ export const Booking = ({ availableTimes, dispatch, submitForm }) => {
           id='guests'
           onChange={formik.handleChange}
         />
-        {formik.errors.guests && <div className='error'>{formik.errors.guests}</div>}
+        {formik.errors.guests && (
+          <div className='error'>{formik.errors.guests}</div>
+        )}
         <label htmlFor='occasion'>Occasion</label>
         <select name='occasion' id='occasion' onChange={formik.handleChange}>
           <option></option>
